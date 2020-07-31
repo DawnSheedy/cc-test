@@ -12,8 +12,9 @@ export default async (socket: Socket, user: any, io: Server) => {
 
     const writerId = writerService.createWriter(user.name, socket);
 
+    user.writerId = writerId;
     //Send writer session id to client
-    socket.emit('writer-assignment', { writerId });
+    socket.emit('user-assignment', { user });
 
     let speakerId = '';
 

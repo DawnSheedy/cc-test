@@ -12,6 +12,14 @@ const users: Record<string, User> = {
         name: "Dawn Sheedy",
         isAdmin: false
     },
+    "devuser2": {
+        name: "Dawn Sheedy2",
+        isAdmin: false
+    },
+    "devuser3": {
+        name: "Dawn Sheedy3",
+        isAdmin: false
+    },
     "devadmin": {
         name: "Dawn Sheedy [Admin]",
         isAdmin: true

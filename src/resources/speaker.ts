@@ -2,17 +2,19 @@ import { randomBytes } from "crypto";
 import { Container } from 'typedi';
 import { Server, Socket } from "socket.io";
 import { send } from "process";
+import WriterService from "../services/writers";
+import Writer from "./writer";
 
 class Speaker {
     private name: string;
     private status: boolean;
-    private claimedBy: string;
+    private claimedBy: Writer | null;
     private available: boolean;
     private id: string;
 
     constructor(name: string) {
         this.name = name;
-        this.claimedBy = "";
+        this.claimedBy = null;
         this.status = true;
         this.available = true;
         this.id = randomBytes(20).toString('hex');
@@ -34,7 +36,7 @@ class Speaker {
     disable() {
         this.status = false;
         this.available = false;
-        this.claimedBy = "";
+        this.claimedBy = null;
         this.sendUpdate()
     }
 
@@ -47,26 +49,33 @@ class Speaker {
     }
 
     claim(writer: string) {
-        this.claimedBy = writer;
+        const writerService = Container.get(WriterService);
+        console.log('test3')
+        this.claimedBy = writerService.findWriter(writer);
+        console.log('test4')
         this.available = false;
         this.sendUpdate()
     }
 
     release() {
-        this.claimedBy = '';
+        this.claimedBy = null;
         this.available = true;
         this.sendUpdate()
     }
 
-    sendUpdate(socket?: Socket) {
-        let io: Server = Container.get('socket-server');
-        let output = {
+    generateUpdate() {
+        return {
             name: this.name,
-            writer: this.claimedBy,
+            writer: this.claimedBy?.generateUpdate(),
             available: this.available,
             status: this.status,
             id: this.id
         }
+    }
+
+    sendUpdate(socket?: Socket) {
+        let io: Server = Container.get('socket-server');
+        let output = this.generateUpdate();
         if (socket) {
             socket.emit('speaker', output);
         } else {

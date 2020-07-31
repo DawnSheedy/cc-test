@@ -21,13 +21,27 @@ export default class SpeakerService {
     }
 
     claimSpeaker(id: string, writerId: string) {
+        //Make sure user doesnt lay claim to any other speakers
+        for (let i=0; i<this.speakers.length; i++) {
+            let speaker = this.speakers[i];
+            if (speaker.getWriter()?.getId() === writerId) {
+                return false;
+            }
+        }
+
+        //Claim if available
         for (let i=0; i<this.speakers.length; i++) {
             let speaker = this.speakers[i];
             if (speaker.getId() === id) {
+                if (this.speakers[i].getWriter()) {
+                    return false;
+                }
                 this.speakers[i].claim(writerId);
                 return true;
             }
         }
+
+        //If speaker doesn't exist
         return false;
     }
 

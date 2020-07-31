@@ -9,6 +9,9 @@ export default async (socket: Socket, user: any, io: Server) => {
     const speakerService = Container.get(SpeakerService);
     const captionService = Container.get(CaptionService);
 
+    //Send writer session id to client
+    socket.emit('user-assignment', { user });
+
     speakerService.sendAll(socket);
     writerService.sendAll(socket);
 
@@ -24,7 +27,7 @@ export default async (socket: Socket, user: any, io: Server) => {
         writerService.deleteWriter(data.writerId);
     })
 
-    socket.on('release-captioner', (data) => {
+    socket.on('release', (data) => {
         speakerService.releaseSpeaker(data.speakerId);
     })
 

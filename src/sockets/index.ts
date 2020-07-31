@@ -1,7 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { Container } from 'typedi';
 import AuthService from './../services/auth'
-import admin from "./event-levels/admin";
+import adminEvents from "./event-levels/admin";
+import userEvents from "./event-levels/user"
 
 export default async(io: Server) => {
 
@@ -36,9 +37,9 @@ export default async(io: Server) => {
     //Register event listeners depending on authorization level
     function routeUser(socket: Socket, user: any, io: Server) {
         if (user.isAdmin) {
-            admin(socket, user, io);
+            adminEvents(socket, user, io);
             return;
         }
-        user(socket, user, io);
+        userEvents(socket, user, io);
     }
 }

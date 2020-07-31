@@ -35,14 +35,17 @@ class Writer {
         this.sendUpdate()
     }
 
-    sendUpdate(socket?: Socket) {
-        let io: Server = Container.get('socket-server');
-        let output = {
+    generateUpdate() {
+        return {
             name: this.name,
             status: this.status,
             id: this.id
         }
+    }
 
+    sendUpdate(socket?: Socket) {
+        let io: Server = Container.get('socket-server');
+        let output = this.generateUpdate();
         if (socket) {
             socket.emit('writer', output);
         } else {

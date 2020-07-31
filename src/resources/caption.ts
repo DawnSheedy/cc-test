@@ -62,16 +62,20 @@ class Caption {
         this.sendUpdate();
     }
 
-    sendUpdate() {
-        let io: Server = Container.get('socket-server');
-        let output = {
+    generateUpdate() {
+        return {
             caption: this.caption,
-            writer: this.writer,
-            speaker: this.speaker,
+            writer: this.writer?.generateUpdate(),
+            speaker: this.speaker?.generateUpdate(),
             cancelled: this.cancelled,
             sent: this.sent,
             id: this.id
         }
+    }
+
+    sendUpdate() {
+        let io: Server = Container.get('socket-server');
+        let output = this.generateUpdate();
         io.emit('caption', output);
     }
 }
