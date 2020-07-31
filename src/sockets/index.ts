@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { Container } from 'typedi';
 import AuthService from './../services/auth'
-import admin from "./userspaces/admin";
+import admin from "./event-levels/admin";
 
 export default async(io: Server) => {
 
