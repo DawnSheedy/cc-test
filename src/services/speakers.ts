@@ -1,5 +1,6 @@
 import { Service, Container } from 'typedi';
 import Speaker from '../resources/speaker';
+import { Socket } from 'socket.io';
 
 @Service()
 export default class SpeakerService {
@@ -11,7 +12,9 @@ export default class SpeakerService {
     }
 
     createSpeaker(name: string) {
-        this.speakers.push(new Speaker(name));
+        let speaker = new Speaker(name);
+        this.speakers.push(speaker);
+        return speaker.getId();
     }
 
     claimSpeaker(id: string, writerId: string) {
@@ -19,9 +22,10 @@ export default class SpeakerService {
             let speaker = this.speakers[i];
             if (speaker.getId() === id) {
                 this.speakers[i].claim(writerId);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     findSpeaker(id: string): Speaker | null {
@@ -51,6 +55,12 @@ export default class SpeakerService {
                 this.speakers[i].disable();
                 return;
             }
+        }
+    }
+
+    sendAll(socket: Socket) {
+        for (let i=0; i<this.speakers.length; i++) {
+            this.speakers[i].sendUpdate(socket);
         }
     }
 }

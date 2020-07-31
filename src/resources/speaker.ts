@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto";
 import { Container } from 'typedi';
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { send } from "process";
 
 class Speaker {
@@ -58,7 +58,7 @@ class Speaker {
         this.sendUpdate()
     }
 
-    sendUpdate() {
+    sendUpdate(socket?: Socket) {
         let io: Server = Container.get('socket-server');
         let output = {
             name: this.name,
@@ -67,7 +67,11 @@ class Speaker {
             status: this.status,
             id: this.id
         }
-        io.emit('speaker', output);
+        if (socket) {
+            socket.emit('speaker', output);
+        } else {
+            io.emit('speaker', output);
+        }
     }
 }
 

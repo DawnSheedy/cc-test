@@ -1,56 +1,54 @@
 import { Service, Container } from 'typedi';
 import Writer from '../resources/writer';
+import { Socket, Server } from 'socket.io';
 
 @Service()
 export default class WriterService {
     
-    private speakers: Speaker[];
+    private writers: Writer[];
+    private writerCount: number;
 
     constructor() {
-        this.speakers = [];
+        this.writers = [];
+        this.writerCount = 0;
     }
 
-    createSpeaker(name: string) {
-        this.speakers.push(new Speaker(name));
+    createWriter(name: string, socket: Socket) {
+        let writer = new Writer(name, socket);
+        this.writers.push(writer);
+        this.writerCount++;
+        return writer.getId();
     }
 
-    claimSpeaker(id: string, writerId: string) {
-        for (let i=0; i<this.speakers.length; i++) {
-            let speaker = this.speakers[i];
-            if (speaker.getId() === id) {
-                this.speakers[i].claim(writerId);
-                return;
-            }
-        }
-    }
-
-    findSpeaker(id: string): Speaker | null {
-        for (let i=0; i<this.speakers.length; i++) {
-            let speaker = this.speakers[i];
-            if (speaker.getId() === id) {
-                return this.speakers[i];
+    findWriter(id: string): Writer | null {
+        for (let i=0; i<this.writers.length; i++) {
+            let writer = this.writers[i];
+            if (writer.getId() === id) {
+                return this.writers[i];
             }
         }
         return null;
     }
 
-    releaseSpeaker(id: string) {
-        for (let i=0; i<this.speakers.length; i++) {
-            let speaker = this.speakers[i];
-            if (speaker.getId() === id) {
-                this.speakers[i].release();
+    deleteWriter(id: string) {
+        for (let i=0; i<this.writers.length; i++) {
+            let writer = this.writers[i];
+            if (writer.getId() === id) {
+                this.writers[i].disable();
+                this.writerCount--;
                 return;
             }
         }
     }
 
-    deleteSpeaker(id: string) {
-        for (let i=0; i<this.speakers.length; i++) {
-            let speaker = this.speakers[i];
-            if (speaker.getId() === id) {
-                this.speakers[i].disable();
-                return;
-            }
+    sendStatus() {
+        const io: Server = Container.get('socket-server');
+        io.emit('status', {userCount: this.writerCount});
+    }
+
+    sendAll(socket: Socket) {
+        for (let i=0; i<this.writers.length; i++) {
+            this.writers[i].sendUpdate(socket);
         }
     }
 }
