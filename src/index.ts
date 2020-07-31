@@ -4,4 +4,5 @@ const startApp = () => {
     loaders();
 }
 
+//Launch ^~^
 startApp();

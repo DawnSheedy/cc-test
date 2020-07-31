@@ -9,6 +9,7 @@ export default async(io: Server) => {
     io.on("connection", (socket) => {
         let user = { name: "", token: "", isAdmin: false, authorized: false };
 
+        //Give users 2 seconds to authenticate before disconnecting them
         socket.on('auth', function(data) {
             let authService = Container.get(AuthService);
             let foundUser = authService.getUser(data.token);
@@ -23,15 +24,16 @@ export default async(io: Server) => {
             }
         })
 
+        //Timeout for authorization
         setTimeout(function () {
             //If user has not authenticated within 5 seconds of connection, kick them out.
             if (!user.authorized) {
                 socket.disconnect(true);
             }
-        }, 5000)
+        }, 2000)
     })
 
-    //Register events
+    //Register event listeners depending on authorization level
     function routeUser(socket: Socket, user: any, io: Server) {
         if (user.isAdmin) {
             admin(socket, user, io);

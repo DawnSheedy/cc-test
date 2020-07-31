@@ -1,5 +1,7 @@
 import { Service } from 'typedi';
 
+//This has almost ZERO security.
+
 interface User {
     name: string;
     isAdmin: boolean;
@@ -18,7 +20,6 @@ const users: Record<string, User> = {
 
 @Service()
 export default class AuthService {
-    //TODO: maybe hash tokens with a secret, use a real datastore, etc.
     getUser(token: string):null | User {
         let user = users[token];
         if (user) {

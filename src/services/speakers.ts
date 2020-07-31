@@ -2,6 +2,9 @@ import { Service, Container } from 'typedi';
 import Speaker from '../resources/speaker';
 import { Socket } from 'socket.io';
 
+//Speaker service
+//TODO: save memory by actually deleting disabled speakers after some time
+
 @Service()
 export default class SpeakerService {
     
@@ -58,6 +61,7 @@ export default class SpeakerService {
         }
     }
 
+    //Send all active speakers to a socket (used for filling data for new connections)
     sendAll(socket: Socket) {
         for (let i=0; i<this.speakers.length; i++) {
             this.speakers[i].sendUpdate(socket);

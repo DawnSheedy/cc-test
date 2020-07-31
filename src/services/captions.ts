@@ -1,6 +1,9 @@
 import { Service, Container } from 'typedi';
 import Caption from '../resources/caption';
 
+//Caption service
+//TODO: save some memory by actually deleting sent captions after some time
+
 @Service()
 export default class CaptionService {
     

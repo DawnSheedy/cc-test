@@ -9,8 +9,10 @@ export default async () => {
 
     const server = http.createServer(app);
 
+    //Start socket stuff
     socketio(server);
 
+    //Load express routes TODO: add pages to these routes
     routes(app);
 
     server.listen(config.port);

@@ -2,6 +2,9 @@ import { Service, Container } from 'typedi';
 import Writer from '../resources/writer';
 import { Socket, Server } from 'socket.io';
 
+//Writer service
+//Todo: save some memory by actually deleting disabled writers after some time.
+
 @Service()
 export default class WriterService {
     
@@ -46,6 +49,7 @@ export default class WriterService {
         io.emit('status', {userCount: this.writerCount});
     }
 
+    //Send all active writers to socket (used for filling data for new clients)
     sendAll(socket: Socket) {
         for (let i=0; i<this.writers.length; i++) {
             this.writers[i].sendUpdate(socket);

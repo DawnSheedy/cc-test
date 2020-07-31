@@ -24,7 +24,10 @@ class Caption {
         this.cancelled = false;
         this.sent = false;
         this.id = randomBytes(20).toString('hex');
+
+        //Set 5 second timer to send a caption to the stream after creation
         setTimeout(this.submit, 5000);
+
         this.sendUpdate();
     }
 
