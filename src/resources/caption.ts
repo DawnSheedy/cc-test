@@ -25,10 +25,17 @@ class Caption {
         this.sent = false;
         this.id = randomBytes(20).toString('hex');
 
+        this.cleanCaption();
         //Set 5 second timer to send a caption to the stream after creation
-        setTimeout(this.submit, 5000);
+        setTimeout(this.submit.bind(this), 5000);
 
         this.sendUpdate();
+    }
+
+    cleanCaption() {
+        //Remove extra spaces :)
+        this.caption = this.caption.trim();
+        this.caption = this.caption.replace(/ +(?= )/g,'');
     }
 
     getId() {

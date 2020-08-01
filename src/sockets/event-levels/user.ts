@@ -26,6 +26,7 @@ export default async (socket: Socket, user: any, io: Server) => {
     })
 
     socket.on('new-caption', (data) => {
+        console.log(data.caption)
         captionService.createCaption(data.caption, speakerId, writerId);
     })
 
