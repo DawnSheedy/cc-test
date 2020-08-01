@@ -34,6 +34,7 @@ export default async (socket: Socket, user: any, io: Server) => {
     })
 
     socket.on('delete-caption', (data) => {
+        //Delete any caption
         captionService.deleteCaption(data.captionId);
     })
 

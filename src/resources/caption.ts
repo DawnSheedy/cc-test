@@ -5,7 +5,6 @@ import Writer from "./writer";
 import Speaker from "./speaker";
 import SpeakerService from "../services/speakers";
 import WriterService from "../services/writers";
-import { isObject } from "util";
 
 class Caption {
     private caption: string;
@@ -13,6 +12,7 @@ class Caption {
     private speaker: Speaker | null;
     private cancelled: boolean;
     private sent: boolean;
+    private status: boolean;
     private id: string;
 
     constructor(speakerId: string, writerId: string, caption: string) {
@@ -23,6 +23,7 @@ class Caption {
         this.writer = writerService.findWriter(writerId);
         this.cancelled = false;
         this.sent = false;
+        this.status = true;
         this.id = randomBytes(20).toString('hex');
 
         this.cleanCaption();
@@ -52,7 +53,15 @@ class Caption {
 
     disable() {
         this.cancelled = true;
+        setTimeout(() => {
+            this.kill();
+        }, 5000)
         this.sendUpdate()
+    }
+
+    kill() {
+        this.status = false;
+        this.sendUpdate();
     }
 
     getWriter() {
@@ -66,6 +75,9 @@ class Caption {
     submit() {
         if (this.cancelled) return;
         this.sent = true;
+        setTimeout(() => {
+            this.kill();
+        }, 5000)
         this.sendUpdate();
     }
 
@@ -76,6 +88,7 @@ class Caption {
             speaker: this.speaker?.generateUpdate(),
             cancelled: this.cancelled,
             sent: this.sent,
+            status: this.status,
             id: this.id
         }
     }

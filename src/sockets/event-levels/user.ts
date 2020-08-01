@@ -26,8 +26,16 @@ export default async (socket: Socket, user: any, io: Server) => {
     })
 
     socket.on('new-caption', (data) => {
-        console.log(data.caption)
         captionService.createCaption(data.caption, speakerId, writerId);
+    })
+
+    socket.on('delete-caption', (data) => {
+        //Delete only if this user wrote it.
+        let caption = captionService.findCaption(data.captionId);
+        if (!caption) return;
+        if (caption.getWriter()?.getId() === user.writerId) {
+            captionService.deleteCaption(caption.getId());
+        }
     })
 
     socket.on('release', (data) => {

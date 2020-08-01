@@ -50,9 +50,7 @@ class Speaker {
 
     claim(writer: string) {
         const writerService = Container.get(WriterService);
-        console.log('test3')
         this.claimedBy = writerService.findWriter(writer);
-        console.log('test4')
         this.available = false;
         this.sendUpdate()
     }
