@@ -3,11 +3,13 @@ import { Container } from 'typedi';
 import WriterService from "../../services/writers";
 import SpeakerService from "../../services/speakers";
 import CaptionService from "../../services/captions";
+import AuthService from "../../services/auth";
 
 export default async (socket: Socket, user: any, io: Server) => {
     const writerService = Container.get(WriterService);
     const speakerService = Container.get(SpeakerService);
     const captionService = Container.get(CaptionService);
+    const authService = Container.get(AuthService);
 
     //Send writer session id to client
     socket.emit('user-assignment', { user });
@@ -33,5 +35,9 @@ export default async (socket: Socket, user: any, io: Server) => {
 
     socket.on('delete-caption', (data) => {
         captionService.deleteCaption(data.captionId);
+    })
+
+    socket.on('disconnect', () => {
+        authService.releaseUser(user.token);
     })
 }
