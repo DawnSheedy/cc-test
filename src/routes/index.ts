@@ -1,11 +1,6 @@
-import { Application } from "express";
+import express, { Application } from "express";
+import path from "path";
 
 export default async (app: Application) => {
-    app.get('/techdesk', function (req, res) {
-        res.send("TechDesk");
-    })
-
-    app.get('/captioner', function (req, res) {
-        res.send("Captioner");
-    })
+    app.use('/', express.static(__dirname+'/public'));
 }

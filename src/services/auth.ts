@@ -9,23 +9,28 @@ interface User {
 }
 
 const users: Record<string, User> = {
-    "devuser": {
-        name: "Dawn Sheedy",
+    "7ahvhad7fbHBhabnbasdf7HCh": {
+        name: "OBS Client",
         isAdmin: false,
         active: false
     },
-    "devuser2": {
-        name: "Dawn Sheedy2",
+    "tkasony": {
+        name: "Taylor",
         isAdmin: false,
         active: false
     },
-    "devuser3": {
-        name: "Dawn Sheedy3",
+    "dawnshee": {
+        name: "Dawn",
         isAdmin: false,
         active: false
     },
-    "devadmin": {
-        name: "Dawn Sheedy [Admin]",
+    "techdesk": {
+        name: "Tech Desk",
+        isAdmin: true,
+        active: false
+    },
+    "techdesk2": {
+        name: "Tech Desk 2",
         isAdmin: true,
         active: false
     }
