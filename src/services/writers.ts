@@ -1,6 +1,8 @@
 import { Service, Container } from 'typedi';
 import Writer from '../resources/writer';
 import { Socket, Server } from 'socket.io';
+import Logger from './logger';
+const logger = Container.get(Logger);
 
 //Writer service
 //Todo: save some memory by actually deleting disabled writers after some time.
@@ -14,6 +16,7 @@ export default class WriterService {
     constructor() {
         this.writers = [];
         this.writerCount = 0;
+        logger.info("Caption service started.");
     }
 
     createWriter(name: string, socket: Socket) {

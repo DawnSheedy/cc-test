@@ -1,4 +1,6 @@
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
+import Logger from './logger';
+const logger = Container.get(Logger);
 
 //This has almost ZERO security.
 
@@ -41,17 +43,21 @@ export default class AuthService {
     getUser(token: string):null | User {
         if (users[token]) {
             if (users[token].active) {
+                logger.info(`User '${users[token].name}' tried to sign in, but is already signed in.`)
                 return null;
             }
+            logger.info(`User '${users[token].name}' signed in.`)
             users[token].active = true;
             return users[token];
         }
+        logger.info('User attempted to sign in with invalid token.')
         return null;
     }
 
     releaseUser(token: string) {
         if (users[token]) {
             users[token].active = false;
+            logger.info(`User '${users[token].name}' has been signed out.`)
         }
     }
 }

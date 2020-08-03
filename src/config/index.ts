@@ -1,3 +1,3 @@
 export default {
-    port: 80
+    port: (process.env.NODE_ENV === "dev" ) ? 8000 : 80
 }

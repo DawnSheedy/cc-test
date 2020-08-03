@@ -1,6 +1,8 @@
 import { Service, Container } from 'typedi';
 import Speaker from '../resources/speaker';
 import { Socket } from 'socket.io';
+import Logger from './logger';
+const logger = Container.get(Logger);
 
 //Speaker service
 //TODO: save memory by actually deleting disabled speakers after some time
@@ -12,6 +14,7 @@ export default class SpeakerService {
 
     constructor() {
         this.speakers = [];
+        logger.info("Speaker service started.")
     }
 
     createSpeaker(name: string) {

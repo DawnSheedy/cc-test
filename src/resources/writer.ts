@@ -2,6 +2,8 @@ import { randomBytes } from "crypto";
 import { Container } from 'typedi';
 import { Server, Socket } from "socket.io";
 import { send } from "process";
+import Logger from "../services/logger";
+const logger = Container.get(Logger);
 
 class Writer {
     private name: string;
@@ -14,6 +16,7 @@ class Writer {
         this.status = true;
         this.socket = socket;
         this.id = randomBytes(20).toString('hex');
+        logger.info(`New writer: \n${JSON.stringify(this.generateUpdate())}`)
         this.sendUpdate();
     }
 
@@ -32,6 +35,7 @@ class Writer {
     disable() {
         this.status = false;
         this.socket.disconnect(true);
+        logger.info(`Writer ${this.id} disabled.`);
         this.sendUpdate()
     }
 

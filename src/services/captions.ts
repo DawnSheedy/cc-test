@@ -1,5 +1,7 @@
 import { Service, Container } from 'typedi';
 import Caption from '../resources/caption';
+import Logger from './logger';
+const logger = Container.get(Logger);
 
 //Caption service
 //TODO: save some memory by actually deleting sent captions after some time
@@ -11,6 +13,7 @@ export default class CaptionService {
 
     constructor() {
         this.captions = [];
+        logger.info("Caption service started.")
     }
 
     createCaption(caption: string, speakerId: string, writerId: string) {

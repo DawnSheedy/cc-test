@@ -5,6 +5,8 @@ import Writer from "./writer";
 import Speaker from "./speaker";
 import SpeakerService from "../services/speakers";
 import WriterService from "../services/writers";
+import Logger from "../services/logger";
+const logger = Container.get(Logger);
 
 class Caption {
     private caption: string;
@@ -30,6 +32,7 @@ class Caption {
         //Set 5 second timer to send a caption to the stream after creation
         setTimeout(this.submit.bind(this), 5000);
 
+        logger.info(`New caption: \n${JSON.stringify(this.generateUpdate())}`)
         this.sendUpdate();
     }
 
@@ -56,11 +59,13 @@ class Caption {
         setTimeout(() => {
             this.kill();
         }, 5000)
+        logger.info(`Caption ${this.id} cancelled.`)
         this.sendUpdate()
     }
 
     kill() {
         this.status = false;
+        logger.info(`Caption ${this.id} killed.`)
         this.sendUpdate();
     }
 
@@ -78,6 +83,7 @@ class Caption {
         setTimeout(() => {
             this.kill();
         }, 5000)
+        logger.info(`Caption ${this.id} submitted.`)
         this.sendUpdate();
     }
 

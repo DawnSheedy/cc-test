@@ -4,6 +4,8 @@ import { Server, Socket } from "socket.io";
 import { send } from "process";
 import WriterService from "../services/writers";
 import Writer from "./writer";
+import Logger from "../services/logger";
+const logger = Container.get(Logger);
 
 class Speaker {
     private name: string;
@@ -18,6 +20,7 @@ class Speaker {
         this.status = true;
         this.available = true;
         this.id = randomBytes(20).toString('hex');
+        logger.info(`New speaker: \n${JSON.stringify(this.generateUpdate())}`)
         this.sendUpdate();
     }
 
@@ -37,6 +40,7 @@ class Speaker {
         this.status = false;
         this.available = false;
         this.claimedBy = null;
+        logger.info(`Speaker ${this.id} disabled.`);
         this.sendUpdate()
     }
 
@@ -52,12 +56,14 @@ class Speaker {
         const writerService = Container.get(WriterService);
         this.claimedBy = writerService.findWriter(writer);
         this.available = false;
+        logger.info(`Speaker ${this.id} claimed by writer: ${writer}`);
         this.sendUpdate()
     }
 
     release() {
         this.claimedBy = null;
         this.available = true;
+        logger.info(`Speaker ${this.id} released.`);
         this.sendUpdate()
     }
 

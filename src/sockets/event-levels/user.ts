@@ -4,16 +4,20 @@ import WriterService from "../../services/writers";
 import SpeakerService from "../../services/speakers";
 import CaptionService from "../../services/captions";
 import AuthService from "../../services/auth";
+import Logger from "../../services/logger";
 
 export default async (socket: Socket, user: any, io: Server) => {
     const writerService = Container.get(WriterService);
     const speakerService = Container.get(SpeakerService);
     const captionService = Container.get(CaptionService);
     const authService = Container.get(AuthService);
+    const logger = Container.get(Logger);
 
     const writerId = writerService.createWriter(user.name, socket);
 
     user.writerId = writerId;
+
+    logger.info(`User '${user.name}' has been assigned writer id: ${user.writerId}`);
     //Send writer session id to client
     socket.emit('user-assignment', { user });
 
@@ -46,5 +50,6 @@ export default async (socket: Socket, user: any, io: Server) => {
         speakerService.releaseSpeaker(speakerId);
         writerService.deleteWriter(writerId);
         authService.releaseUser(user.token);
+        logger.info(`User '${user.name}' has disconnected. (socket id: ${socket.id})`)
     })
 }

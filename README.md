@@ -7,6 +7,13 @@ This project expects TypeScript and ts-node to be installed globally on your sys
 ```bash
 npm install -g typescript
 npm install -g ts-node
+npm install
+```
+
+## Running
+
+```bash
+npm run dev
 ```
 
 ## Building the client
